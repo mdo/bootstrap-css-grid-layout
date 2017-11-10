@@ -1,0 +1,41 @@
+#!/bin/sh
+
+red=$'\e[1;31m'
+grn=$'\e[1;32m'
+end=$'\e[0m'
+
+account='mdo'
+
+if [ "$1" = "" ]
+then
+  repo="bootstrap-css-grid-layout"
+else
+  repo=$1
+fi
+
+# Build the site
+#
+# Generate the Jekyll site with an alterate baseurl for the intenral-only
+# staging site, but don't start a local server.
+printf "\n${grn}# Building site...\n--------------------------------------------------${end}\n"
+DISABLE_WHITELIST=1 bundle exec jekyll build --baseurl "/${account}/${repo}"
+
+# Create a temp Git repo to push from
+#
+# 1. From the compiled Jekyll `_site` directory
+# 2. Initialize a new repo within that directory
+# 3. Add a new remote called staging that we can push to
+# 4. Add all our files
+# 5. Write a generic commit message
+printf "\n${grn}# Creating a temp Git repo...\n--------------------------------------------------${end}\n"
+cd _site && git init && git remote add origin https://github.com/${account}/${repo} && git add . && git commit -m "Deploying latest changes"
+
+# Push the site
+#
+# Push the new `_site` temporary repo to our remote staging repo, then remove
+# the remote again to do it all over again afterwards.
+printf "\n${grn}# Deploying...\n--------------------------------------------------${end}\n"
+git push origin master:gh-pages --force
+
+# Celebrate and open the staging site
+printf "\n${grn}# Success!${end}\n"
