@@ -1,0 +1,177 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="css/docs.css">
+    <link rel="stylesheet" href="css/syntax.css">
+    <link rel="stylesheet" href="css/grid.css">
+  </head>
+  <body>
+    <img src="https://camo.githubusercontent.com/5d417873a11d7175ec40fc3af3c6cb024a531dd7/68747470733a2f2f676574626f6f7473747261702e636f6d2f6173736574732f6272616e642f626f6f7473747261702d736f6c69642e737667" alt="" width="72" height="72" data-canonical-src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" style="max-width: 100%; margin-bottom: 1.5rem;">
+
+    <h1 id="bootstraps-grid-in-css-grid">Bootstrap’s grid in CSS Grid</h1>
+<p>This demo explores how we might take as much of the complex responsive <a href="https://getbootstrap.com/docs/4.0/layout/grid/">grid system from Bootstrap 4</a> and rebuild it with only CSS Grid. No Sass, no flexbox, no floats. Ideally we end up with all the same functionality, but probably just less browser support.</p>
+
+<p>Browser support currently includes IE11, Edge 15+, latest Chrome (desktop and Android), latest Safari (mobile and desktop), latest Firefox. Flexbox, by contrast, is supported across those browsers in earlier versions—IE10+, Edge 12+, Android 4.4, etc. For more details, see <a href="https://caniuse.com/#feat=css-grid">https://caniuse.com/#feat=css-grid</a> and <a href="https://caniuse.com/#feat=flexbox">https://caniuse.com/#feat=flexbox</a>.</p>
+
+<p>This document doesn’t cover every part of CSS Grid Layout, just what we need to recreate as much of Bootstrap’s existing flexbox grid implementation.</p>
+
+<hr />
+
+<h2 id="defining-our-grid">Defining our grid</h2>
+
+<ul>
+  <li>The grid is 12 columns with a 30px gutter.</li>
+  <li>We have five breakpoints in our responsive grid: extra small (no <a href="https://en.wikipedia.org/wiki/Infix">infix</a>), small (<code class="highlighter-rouge">sm</code>), medium (<code class="highlighter-rouge">md</code>), large (<code class="highlighter-rouge">lg</code>), and extra large (<code class="highlighter-rouge">xl</code>).</li>
+  <li>Due to limitations with CSS Grid, we need additional responsive <code class="highlighter-rouge">.row-*</code> classes. These are not present in Bootstrap’s grid.</li>
+  <li>We’re using Jekyll to compile this page and render from Markdown. We have a single layout, a custom <code class="highlighter-rouge">highlight</code> plugin, and three CSS files (docs layout and type, code syntax, and the grid itself).</li>
+</ul>
+
+<hr />
+
+<h2 id="about-css-grid-layout">About CSS Grid Layout</h2>
+<p>CSS Grid Layout—not to be confused with a CSS grid—introduces new properties, values, and units. Here’s a primer for those new like me.</p>
+
+<ul>
+  <li><code class="highlighter-rouge">display: grid</code> initializes the new layout module by establishing a <em>grid container</em>. Once a grid container is created, immediate children elements become <em>grid items</em>.</li>
+  <li>Two new properties, <code class="highlighter-rouge">grid-template-columns</code> and <code class="highlighter-rouge">grid-template-rows</code>, allow you to create grid layouts in either direction on the same container. By comparison, flexbox controls layout in one of two directions, <code class="highlighter-rouge">row</code> or <code class="highlighter-rouge">column</code>.</li>
+  <li>Another new property, <code class="highlighter-rouge">grid-gap</code>, lets you specify the space between each grid item. <strong>This applies vertically and horizontally.</strong></li>
+  <li>In addition to the units you’ve grown accustomed to using for grids (<code class="highlighter-rouge">px</code>, <code class="highlighter-rouge">%</code>, <code class="highlighter-rouge">em</code>, or <code class="highlighter-rouge">rem</code>), you can now use <code class="highlighter-rouge">fr</code> (short for fractional units).</li>
+</ul>
+
+<hr />
+
+<h2 id="12-columns">12 columns</h2>
+<p>Bootstrap’s grid system is based on a 12 column grid. From there, you can span multiple columns—by breakpoint—as needed. It’s rare you’ll have this exact setup, but it demonstrates the grid’s foundation.</p>
+
+<div class="bd-example">
+<div class="row">
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+</div>
+</div>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<p>None of these columns have a number specified, but you can choose to specify some and let the grid do the rest. Here we’ve turned the first four <code class="highlighter-rouge">.col</code>s into <code class="highlighter-rouge">.col-4</code>.</p>
+
+<div class="bd-example">
+<div class="row">
+  <div class="col-4">col-4</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+  <div>col</div>
+</div>
+</div>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-4"</span><span class="nt">&gt;</span>col-4<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>col<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<p>Lastly, you can specify a number of grid columns to span for every column.</p>
+
+<div class="bd-example">
+<div class="row">
+  <div class="col-6">col-6</div>
+  <div class="col-3">col-3</div>
+  <div class="col-3">col-3</div>
+</div>
+</div>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-6"</span><span class="nt">&gt;</span>col-6<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-3"</span><span class="nt">&gt;</span>col-3<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-3"</span><span class="nt">&gt;</span>col-3<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<hr />
+
+<h2 id="responsive">Responsive</h2>
+<p>When we say “responsive grid”, we mean controlling the behavior (vertically stack them or horizontally fill a row) and changing the number of grid columns to span by breakpoint.</p>
+
+<h3 id="stacked-xs-columns-sm">Stacked xs, columns sm+</h3>
+<p>Starts out stacked on mobile (xs), but at <code class="highlighter-rouge">sm</code> and up, let the horizontal columns kick in.</p>
+
+<div class="bd-example">
+<div class="row">
+  <div class="col-sm-6">col-sm-6</div>
+  <div class="col-sm-3">col-sm-3</div>
+  <div class="col-sm-3">col-sm-3</div>
+</div>
+</div>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-6"</span><span class="nt">&gt;</span>col-sm-6<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-3"</span><span class="nt">&gt;</span>col-sm-3<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-3"</span><span class="nt">&gt;</span>col-sm-3<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<div class="bd-example">
+<div class="row-sm">
+  <div class="col-sm-6">col-sm-6</div>
+  <div class="col-sm-3">col-sm-3</div>
+  <div class="col-sm-3">col-sm-3</div>
+</div>
+</div>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row-sm"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-6"</span><span class="nt">&gt;</span>col-sm-6<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-3"</span><span class="nt">&gt;</span>col-sm-3<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-3"</span><span class="nt">&gt;</span>col-sm-3<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<h3 id="stacked-xs-w-mixed-columns-at-sm-and-md">Stacked xs w/ mixed columns at sm and md</h3>
+<p>Starts out stacked on mobile (xs), defining particular column widths at <code class="highlighter-rouge">sm</code>, and then overriding those with <code class="highlighter-rouge">md</code> columns that apply for <code class="highlighter-rouge">md</code>, <code class="highlighter-rouge">lg</code>, and <code class="highlighter-rouge">xl</code>.</p>
+
+<div class="bd-example">
+<div class="row">
+  <div class="col-sm-6 col-md-4">col-sm-6 col-md-4</div>
+  <div class="col-sm-3 col-md-4">col-sm-3 col-md-4</div>
+  <div class="col-sm-3 col-md-4">col-sm-3 col-md-4</div>
+</div>
+</div>
+<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-6 col-md-4"</span><span class="nt">&gt;</span>col-sm-6 col-md-4<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-3 col-md-4"</span><span class="nt">&gt;</span>col-sm-3 col-md-4<span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-sm-3 col-md-4"</span><span class="nt">&gt;</span>col-sm-3 col-md-4<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span></code></pre></div>
+
+<hr />
+
+<h2 id="questions">Questions</h2>
+<ul>
+  <li>Does CSS Grid have an option for a column to fill available space?</li>
+  <li>Padding on cells vs gutter (margin)? Otherwise benefit is no negative margins…</li>
+</ul>
+
+  </body>
+</html>
