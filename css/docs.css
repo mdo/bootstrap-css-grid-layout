@@ -1,0 +1,55 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font: 1rem/1.5 -apple-system, sans-serif;
+  color: #333;
+}
+
+h1, h2, h3 {
+  margin-top: 0;
+  margin-bottom: .5rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+p {
+  max-width: 40rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+li {
+  margin-bottom: .5rem;
+}
+
+hr {
+  height: 1px;
+  margin: 3rem 0;
+  background-color: #ddd;
+  border: 0;
+}
+
+a {
+  color: royalblue;
+}
+
+[class*="row"],
+[class*="row"] > * {
+  background-color: rgba(0,0,255,.15);
+  border: 1px solid rgba(0,0,255,.25);
+}
+
+[class*="row"] {
+  margin-bottom: 1.5rem;
+}
+
+code {
+  padding: .1rem .2rem;
+  font-family: SFMono-Regular, Menlo, monospace;
+  color: mediumslateblue;
+}
